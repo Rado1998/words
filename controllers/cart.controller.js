@@ -1,52 +1,52 @@
-const {Cart} = require('../models/cart.model');
-const {User} = require('../models/user.model');
+const { Cart } = require('../models/cart.model');
+const { User } = require('../models/user.model');
 const mongoose = require('mongoose');
 
 
 
-function create(req,res,next) {
+function create(req, res, next) {
 
-    Cart.create(req.body).then((result)=>{
-  
+    Cart.create(req.body).then((result) => {
+
         const userDate = {
-            refId :mongoose.Types.ObjectId(result['_id']),
-            status:0
+            refId: mongoose.Types.ObjectId(result['_id']),
+            status: 0
         }
-        User.update({},{$push:{carts:userDate}},{multi:true}).then((resUser)=>{
+        User.update({}, { $push: { carts: userDate } }, { multi: true }).then((resUser) => {
             res.status(200).json({
-                message:'create',
-                data : result
+                message: 'create',
+                data: result
             })
-        }).catch((errUser)=>{
+        }).catch((errUser) => {
             res.status(400).json({
-                message:'false',
-                data : errUser
+                message: 'false',
+                data: errUser
             })
         })
 
-    }).catch((err)=>{
+    }).catch((err) => {
         res.status(400).json({
-            message:'false',
-            data : err
+            message: 'false',
+            data: err
         })
     })
-    
+
 }
 
-function index(req,res,next) {
+function index(req, res, next) {
 
-    Cart.find({}).then((result)=>{
+    Cart.find({}).then((result) => {
         res.status(200).json({
-            message:'index',
-            data : result
+            message: 'index',
+            data: result
         })
-    }).catch((err)=>{
+    }).catch((err) => {
         res.status(400).json({
-            message:'false',
-            data : err
+            message: 'false',
+            data: err
         })
     })
-    
+
 }
 
 
