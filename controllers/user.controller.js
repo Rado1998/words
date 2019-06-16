@@ -53,19 +53,16 @@ function getByToken(req, res, next) {
 }
 
 async function upadteStatus(req, res, next) {
-    console.log('mtav')
     let users = await User.find({ 'carts.status': false }).populate('carts.refId');
-    console.log(users)
     for (const user of users) {
         for (const cart of user['carts']) {
-            console.log(cart)
             if (cart['status'] == false) {
                 try {
                     await User.updateOne({ _id: user['_id'], 'carts._id': cart['_id'] }, { $set: { 'carts.$.status': 1 } })
                     //stex uxarkel Xchoin
 
                 } catch (error) {
-                   return error;
+                    return error;
                 }
                 break;
 
@@ -73,11 +70,37 @@ async function upadteStatus(req, res, next) {
 
         }
     }
-   return 0;
+    return 0;
 }
 
-setInterval(upadteStatus,14400000)
+async function getCartById(req, res, next) {
+    Cart.findById(req.params.cartId)
+        .then((result) => {
+            if (result) {
+                res.status(200).json({
+                    message: 'completed',
+                    data: result
+                })
+            }
+            else {
+                res.status(400).json({
+                    message: 'error',
+                    data: 'Cart not found'
+                })
+            }
+        })
+        .catch((error) => {
+            res.status(400).json({
+                message: 'error',
+                error: error
+            })
+        })
+    return 0;
+}
+
+setInterval(upadteStatus, 20000)
 module.exports = {
     create,
-    getByToken
+    getByToken,
+    getCartById
 }
