@@ -15,7 +15,12 @@ const UserSchema = new Schema({
     deviceToken: {
         type: String,
         required: true,
-        unique :true
+        unique: true
+    },
+    fireBaseToken: {
+        type: String,
+        required: true,
+        unique: true
     }
 }, { usePushEach: true, timestamps: true })
 
